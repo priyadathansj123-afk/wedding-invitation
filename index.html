@@ -23,38 +23,6 @@
       align-items:center;
       justify-content:center;
       padding:20px;
-      overflow-x:hidden;
-      position:relative;
-    }
-    .flower-stream{
-      position:fixed;
-      bottom:0;
-      width:140px;
-      height:45vh;
-      pointer-events:none;
-      overflow:visible;
-      z-index:1;
-    }
-    .flower-stream.left{left:0}
-    .flower-stream.right{right:0}
-    .flower{
-      position:absolute;
-      bottom:-18px;
-      font-size:20px;
-      opacity:.9;
-      filter: drop-shadow(0 3px 4px rgba(0,0,0,.15));
-      animation:flowerRise 6s linear forwards;
-    }
-    @keyframes flowerRise{
-      0%{
-        transform: translate(0, 0) scale(.7) rotate(0deg);
-        opacity:0;
-      }
-      15%{opacity:.95}
-      100%{
-        transform: translate(var(--drift), -46vh) scale(1.15) rotate(var(--spin));
-        opacity:0;
-      }
     }
     .card{
       width:min(760px,100%);
@@ -64,30 +32,12 @@
       padding:28px;
       box-shadow:0 15px 35px rgba(0,0,0,.12);
       text-align:center;
-      position:relative;
-      z-index:2;
       animation:fadeIn .9s ease;
     }
-    .hearts{
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      overflow:hidden;
-      border-radius:20px;
-    }
-    h1{
-      margin:0 0 8px;
-      font-size:2.2rem;
-      color:var(--accent);
-    }
+    h1{margin:0 0 8px;font-size:2.2rem;color:var(--accent);}
     h2{margin:8px 0 18px;font-size:1.7rem}
     p{margin:8px 0;line-height:1.5}
-    .date{
-      margin:18px 0;
-      font-weight:700;
-      font-size:1.05rem;
-      letter-spacing:.4px;
-    }
+    .date{margin:18px 0;font-weight:700;font-size:1.05rem;}
     .btns{
       margin-top:20px;
       display:flex;
@@ -105,7 +55,6 @@
       text-decoration:none;
       font-size:.95rem;
     }
-    button:hover,a.btn:hover{opacity:.9}
     .hidden{display:none}
     .rsvp-box{
       margin-top:16px;
@@ -122,136 +71,71 @@
       margin:6px 0;
       font-size:.95rem;
     }
-    .footer{
-      margin-top:14px;
-      font-size:.9rem;
-      opacity:.8;
-    }
+    .footer{margin-top:14px;font-size:.9rem;opacity:.8;}
     @keyframes fadeIn{
       from{opacity:0;transform:translateY(14px)}
       to{opacity:1;transform:translateY(0)}
     }
-    .heart{
-      position:absolute;
-      font-size:18px;
-      animation:float 5s linear infinite;
-      opacity:.7;
-    }
-    @keyframes float{
-      0%{transform:translateY(100%) scale(.7);opacity:0}
-      20%{opacity:.8}
-      100%{transform:translateY(-120%) scale(1.2);opacity:0}
-    }
   </style>
 </head>
 <body>
-  <div class="flower-stream left" id="flowersLeft"></div>
-  <div class="flower-stream right" id="flowersRight"></div>
-  <div class="card">
-    <div class="hearts" id="hearts"></div>
-    <h1>Wedding Invitation</h1>
-    <p>With joyful hearts, we invite you to celebrate the wedding of</p>
-    <h2>Sreekandh & Salini</h2>
-    <p class="date">Sunday, 24 May 2026 • 6:00 PM</p>
-    <p>Potencode, TVM, Kerala, India</p>
 
-    <div class="btns">
-      <button id="openRsvp">RSVP</button>
-      <button id="countdownBtn">Show Countdown</button>
-      <a class="btn" target="_blank"
-         href="https://www.google.com/maps/search/?api=1&query=Potencode+TVM+Kerala+India">
-         View Location
-      </a>
-    </div>
+<div class="card">
+  <h1>Wedding Invitation</h1>
+  <p>With joyful hearts, we invite you to celebrate the wedding of</p>
+  <h2>Sreekandh & Salini</h2>
+  <p class="date">Sunday, 24 May 2026 • 6:00 PM</p>
+  <p>Potencode, TVM, Kerala, India</p>
 
-    <div id="rsvpBox" class="rsvp-box hidden">
-      <input id="name" type="text" placeholder="Your Name" />
-      <br />
-      <input id="guests" type="number" min="1" max="10" placeholder="Number of Guests" />
-      <br />
-      <button id="submitRsvp">Submit RSVP</button>
-      <p id="msg"></p>
-    </div>
-
-    <p id="countdown" class="footer"></p>
+  <div class="btns">
+    <button onclick="toggleRsvp()">RSVP</button>
+    <a class="btn" target="_blank"
+       href="https://www.google.com/maps/search/?api=1&query=Potencode+TVM+Kerala+India">
+       View Location
+    </a>
   </div>
 
-  <script>
-    const weddingDate = new Date("2026-05-24T18:00:00");
-    const countdownEl = document.getElementById("countdown");
-    const rsvpBox = document.getElementById("rsvpBox");
+  <div id="rsvpBox" class="rsvp-box hidden">
+    <form action="https://formspree.io/f/mpqjpnrv" method="POST">
+      <input type="hidden" name="_subject" value="New Wedding RSVP" />
+      <input type="hidden" name="_captcha" value="false" />
 
-    document.getElementById("openRsvp").onclick = () => {
-      rsvpBox.classList.toggle("hidden");
-    };
+      <input type="text" name="name" placeholder="Your Name" required />
+      <br />
+      <input type="number" name="guests" min="1" max="10" placeholder="Number of Guests" required />
+      <br />
+      <button type="submit">Submit RSVP</button>
+    </form>
+  </div>
 
-    document.getElementById("submitRsvp").onclick = () => {
-      const name = document.getElementById("name").value.trim();
-      const guests = document.getElementById("guests").value.trim();
-      const msg = document.getElementById("msg");
+  <p id="countdown" class="footer"></p>
+</div>
 
-      if (!name || !guests) {
-        msg.textContent = "Please fill in all details.";
-        msg.style.color = "crimson";
-        return;
-      }
+<script>
+const weddingDate = new Date("2026-05-24T18:00:00");
+const countdownEl = document.getElementById("countdown");
 
-      msg.textContent = `Thank you, ${name}! RSVP confirmed for ${guests} guest(s).`;
-      msg.style.color = "green";
-    };
+function toggleRsvp(){
+  document.getElementById("rsvpBox").classList.toggle("hidden");
+}
 
-    function updateCountdown() {
-      const now = new Date();
-      const diff = weddingDate - now;
+function updateCountdown() {
+  const now = new Date();
+  const diff = weddingDate - now;
+  if (diff <= 0) {
+    countdownEl.textContent = "The big day is here. Welcome to the wedding!";
+    return;
+  }
+  const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+  const m = Math.floor((diff / (1000 * 60)) % 60);
+  const s = Math.floor((diff / 1000) % 60);
+  countdownEl.textContent = `Countdown: ${d}d ${h}h ${m}m ${s}s`;
+}
 
-      if (diff <= 0) {
-        countdownEl.textContent = "The big day is here. Welcome to the wedding!";
-        return;
-      }
-      const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-      const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-      const m = Math.floor((diff / (1000 * 60)) % 60);
-      const s = Math.floor((diff / 1000) % 60);
-      countdownEl.textContent = `Countdown: ${d}d ${h}h ${m}m ${s}s`;
-    }
+setInterval(updateCountdown, 1000);
+updateCountdown();
+</script>
 
-    document.getElementById("countdownBtn").onclick = updateCountdown;
-    setInterval(updateCountdown, 1000);
-    updateCountdown();
-
-    // floating hearts
-    const hearts = document.getElementById("hearts");
-    setInterval(() => {
-      const heart = document.createElement("span");
-      heart.className = "heart";
-      heart.textContent = "❤";
-      heart.style.left = Math.random() * 100 + "%";
-      heart.style.animationDuration = (3 + Math.random() * 3) + "s";
-      hearts.appendChild(heart);
-      setTimeout(() => heart.remove(), 6000);
-    }, 500);
-
-    // floating flowers from both bottom corners
-    const flowersLeft = document.getElementById("flowersLeft");
-    const flowersRight = document.getElementById("flowersRight");
-    const petals = ["🌸", "🌺", "🌼"];
-
-    function spawnFlower(container, direction) {
-      const flower = document.createElement("span");
-      flower.className = "flower";
-      flower.textContent = petals[Math.floor(Math.random() * petals.length)];
-      flower.style.left = (8 + Math.random() * 60) + "px";
-      flower.style.setProperty("--drift", ((20 + Math.random() * 55) * direction) + "px");
-      flower.style.setProperty("--spin", ((direction > 0 ? 1 : -1) * (45 + Math.random() * 75)) + "deg");
-      flower.style.animationDuration = (4.5 + Math.random() * 2.2) + "s";
-      container.appendChild(flower);
-      setTimeout(() => flower.remove(), 7000);
-    }
-
-    setInterval(() => {
-      spawnFlower(flowersLeft, 1);
-      spawnFlower(flowersRight, -1);
-    }, 650);
-  </script>
 </body>
 </html>
